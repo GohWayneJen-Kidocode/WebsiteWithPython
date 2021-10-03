@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, jsonify
+from flask import Blueprint, render_template, request, flash, jsonify, url_for
 from flask_login import login_required, current_user
 from .models import Note
 from . import db
@@ -7,12 +7,15 @@ import json
 views = Blueprint('views', __name__)
 
 @views.route('/')
+@login_required
 def home():
+    if not current_user:
+        return render_template(url_for('auth.login'))
     if request.method == 'POST':
         note = request.form.get('note')
 
         if len(note) < 1:
-            flash('Your note is too short.', ctegory='error')
+            flash('Your note is too short.', category='error')
         else:
             new_note = Note(data=note, user_id=current_user.id)
             db.session.add(new_note)
