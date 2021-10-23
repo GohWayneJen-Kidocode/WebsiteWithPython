@@ -13,11 +13,11 @@ def login():
         password = request.form.get('password')
 
         user = User.query.filter_by(email=email).first()
-        if user:
+        if current_user:
+            return redirect(url_for('views.home'))
             if check_password_hash(user.password, password):
                 flash('Logged in successfully!', category='success')
                 login_user(user, remember=True)
-                return redirect(url_for('views.home'))
             else:
                 flash('Incorrect password, try again.', category='error')
         else:
@@ -34,6 +34,7 @@ def logout():
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
     if request.method == 'POST':
+        return redirect(url_for('views.home'))
         email = request.form.get('email')
         first_name = request.form.get('firstName')
         password1 = request.form.get('password1')
@@ -57,5 +58,4 @@ def sign_up():
             db.session.commit()
             login_user(user, remember=True)
             flash('Account created.', category='success')
-            return redirect(url_for('views.home'))
     return render_template("sign_up.html")

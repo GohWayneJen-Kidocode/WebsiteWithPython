@@ -3,7 +3,7 @@
 {% block box %}
 
 {{user}}
-    <form method="POST">
+    <form method="POST" action="{{url_for('auth.sign_up')}}">
       <h3 align="center">Sign Up</h3>
       <div class="form-group">
         <label for="email">Email Address</label>
